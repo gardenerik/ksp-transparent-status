@@ -14,11 +14,6 @@ func (t LessonTime) String() string {
 	return fmt.Sprintf("%d:%02d", t/100, t%100)
 }
 
-func AreLessonsHappening() bool {
-	candleTime := CandleTime()
-	return candleTime >= 810 && candleTime <= 1950
-}
-
 func GetCurrentLesson() (LessonTime, bool) {
 	candleTime := CandleTime()
 	previous := LessonTime(0)
