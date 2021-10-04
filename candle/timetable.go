@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 	"zahradnik.xyz/mirror-stats/config"
 )
@@ -12,6 +13,11 @@ import (
 type CachedTimetable struct {
 	Lessons     []CandleLesson
 	RetrievedAt time.Time
+}
+
+type CandlePerson struct {
+	config.Person
+	IsOnline bool
 }
 
 var TimetableCache = map[string]CachedTimetable{}
@@ -51,8 +57,8 @@ func GetTimetable(name string) CachedTimetable {
 	return timetable
 }
 
-func GetPeopleHavingLesson(l LessonTime, day time.Weekday) []config.Person {
-	out := []config.Person{}
+func GetPeopleHavingLesson(l LessonTime, day time.Weekday) []CandlePerson {
+	out := []CandlePerson{}
 
 	for _, person := range config.People {
 		tt := GetTimetable(person.CandleName)
@@ -62,7 +68,10 @@ func GetPeopleHavingLesson(l LessonTime, day time.Weekday) []config.Person {
 			}
 
 			if lesson.Start.LessonTime() <= l && lesson.End.LessonTime() >= l {
-				out = append(out, person)
+				out = append(out, CandlePerson{
+					Person:   person,
+					IsOnline: strings.Contains(lesson.Note, "online"),
+				})
 				break
 			}
 		}

@@ -4,7 +4,6 @@ import (
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 	"time"
-	"zahradnik.xyz/mirror-stats/config"
 )
 
 func RenderTimetables() {
@@ -41,7 +40,7 @@ func header(x, y int, fg, bg termbox.Attribute, msg string) int {
 	return x
 }
 
-func printlist(x, y int, items []config.Person) int {
+func printlist(x, y int, items []CandlePerson) int {
 	w, _ := termbox.Size()
 	startX := x
 	for i, person := range items {
@@ -59,8 +58,13 @@ func printlist(x, y int, items []config.Person) int {
 			y++
 		}
 
+		attr := person.Color()
+		if person.IsOnline {
+			attr = attr | termbox.AttrUnderline
+		}
+
 		for _, c := range item {
-			termbox.SetCell(x, y, c, person.Color(), termbox.RGBToAttribute(0, 0, 0))
+			termbox.SetCell(x, y, c, attr, termbox.RGBToAttribute(0, 0, 0))
 			x += runewidth.RuneWidth(c)
 		}
 	}
