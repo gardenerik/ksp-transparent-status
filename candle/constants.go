@@ -2,6 +2,8 @@ package candle
 
 import (
 	"encoding/xml"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,6 +31,27 @@ type CandleXML struct {
 	Lessons []CandleLesson `xml:"lesson"`
 }
 
+type CandleTimeString string
+
+func (s CandleTimeString) LessonTime() LessonTime {
+	parts := strings.SplitN(string(s), ":", 2)
+	if len(parts) != 2 {
+		return 0
+	}
+
+	h, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0
+	}
+
+	m, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return 0
+	}
+
+	return LessonTime(h * 100 + m)
+}
+
 type CandleLesson struct {
 	XMLName xml.Name `xml:"lesson"`
 	Id      int      `xml:"id,attr"`
@@ -36,8 +59,8 @@ type CandleLesson struct {
 	Room    string   `xml:"room"`
 	Subject string   `xml:"subject"`
 	Day     string   `xml:"day"`
-	Start   string   `xml:"start"`
-	End     string   `xml:"end"`
+	Start   CandleTimeString   `xml:"start"`
+	End     CandleTimeString   `xml:"end"`
 	Teacher string   `xml:"teacher"`
 	Note    string   `xml:"note"`
 }

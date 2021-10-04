@@ -61,7 +61,7 @@ func GetPeopleHavingLesson(l LessonTime, day time.Weekday) []config.Person {
 				continue
 			}
 
-			if lesson.Start == l.String() {
+			if lesson.Start.LessonTime() <= l && lesson.End.LessonTime() >= l {
 				out = append(out, person)
 				break
 			}
