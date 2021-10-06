@@ -25,7 +25,7 @@ func RenderTimetables() {
 
 	next, exists := GetNextLesson()
 	if exists {
-		end := header(x, y, termbox.RGBToAttribute(0, 0, 0)|termbox.AttrBold, termbox.RGBToAttribute(251, 197, 49), " Ďaľšia hodina: ")
+		end := header(x, y, termbox.RGBToAttribute(0, 0, 0)|termbox.AttrBold, termbox.RGBToAttribute(251, 197, 49), " Dalsia hodina: ")
 		header(end+1, y, termbox.RGBToAttribute(200, 200, 200), termbox.RGBToAttribute(0, 0, 0), next.String())
 
 		y = printlist(x, y+1, GetPeopleHavingLesson(next, time.Now().Weekday()))
