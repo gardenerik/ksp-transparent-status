@@ -18,7 +18,7 @@ func GetCurrentLesson() (LessonTime, bool) {
 	candleTime := CandleTime()
 	previous := LessonTime(0)
 	for _, hour := range Lessons {
-		if hour >= candleTime {
+		if hour > candleTime {
 			return previous, previous != 0
 		}
 		previous = hour

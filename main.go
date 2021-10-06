@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/nsf/termbox-go"
 	"os"
 	"os/signal"
@@ -10,20 +9,20 @@ import (
 	"zahradnik.xyz/mirror-stats/candle"
 	"zahradnik.xyz/mirror-stats/clock"
 	"zahradnik.xyz/mirror-stats/config"
+	"zahradnik.xyz/mirror-stats/logger"
 )
 
 func main() {
 	err := config.ReadConfig()
 	if err != nil {
-		panic(err)
+		logger.Log.Panicln(err)
 	}
 
 	BindSIGHUP()
 
 	err = termbox.Init()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		logger.Log.Panicln(err)
 	}
 	termbox.SetOutputMode(termbox.OutputRGB)
 	termbox.SetInputMode(termbox.InputEsc)
@@ -56,7 +55,7 @@ func BindSIGHUP () {
 		for range c {
 			err := config.ReadConfig()
 			if err != nil {
-				panic(err)
+				logger.Log.Panicln(err)
 			}
 
 			termbox.Clear(termbox.ColorDefault, termbox.RGBToAttribute(255, 0, 0))

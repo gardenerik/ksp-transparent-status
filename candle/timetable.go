@@ -3,11 +3,11 @@ package candle
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
 	"zahradnik.xyz/mirror-stats/config"
+	"zahradnik.xyz/mirror-stats/logger"
 )
 
 type CachedTimetable struct {
@@ -23,6 +23,8 @@ type CandlePerson struct {
 var TimetableCache = map[string]CachedTimetable{}
 
 func LoadTimetable(name string) ([]CandleLesson, error) {
+	logger.Log.Printf("Downloading timetable for %v.\n", name)
+
 	resp, err := http.Get(fmt.Sprintf("https://candle.fmph.uniba.sk/rozvrh/%v.xml", name))
 	if err != nil {
 		return nil, err
@@ -43,7 +45,7 @@ func GetTimetable(name string) CachedTimetable {
 	if !exists || time.Now().Sub(timetable.RetrievedAt) >= 6*time.Hour {
 		tt, err := LoadTimetable(name)
 		if err != nil {
-			log.Println(err)
+			logger.Log.Println(err)
 			return CachedTimetable{}
 		}
 		dat := CachedTimetable{

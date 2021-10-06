@@ -5,6 +5,7 @@ import (
 	"github.com/nsf/termbox-go"
 	"io/ioutil"
 	"os"
+	"zahradnik.xyz/mirror-stats/logger"
 )
 
 type Person struct {
@@ -20,6 +21,8 @@ func (p Person) Color() termbox.Attribute {
 var People []Person
 
 func ReadConfig() error {
+	logger.Log.Println("Reloading config")
+
 	file, err := os.Open("config.json")
 	if err != nil {
 		return err
