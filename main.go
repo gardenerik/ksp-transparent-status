@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/nsf/termbox-go"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 	"zahradnik.xyz/mirror-stats/candle"
 	"zahradnik.xyz/mirror-stats/clock"
@@ -15,6 +17,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	BindSIGHUP()
 
 	err = termbox.Init()
 	if err != nil {
@@ -42,4 +46,21 @@ func main() {
 		termbox.Flush()
 		time.Sleep(time.Second)
 	}
+}
+
+func BindSIGHUP () {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGHUP)
+
+	go func(){
+		for range c {
+			err := config.ReadConfig()
+			if err != nil {
+				panic(err)
+			}
+
+			termbox.Clear(termbox.ColorDefault, termbox.RGBToAttribute(255, 0, 0))
+			termbox.Flush()
+		}
+	}()
 }
