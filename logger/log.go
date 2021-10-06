@@ -5,4 +5,4 @@ import (
 	"os"
 )
 
-var Log = log.New(os.Stderr, "", 0)
+var Log = log.New(os.Stderr, "", log.LstdFlags)
