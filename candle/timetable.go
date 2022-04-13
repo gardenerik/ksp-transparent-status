@@ -25,7 +25,7 @@ var TimetableCache = map[string]CachedTimetable{}
 func LoadTimetable(name string) ([]CandleLesson, error) {
 	logger.Log.Printf("Downloading timetable for %v.\n", name)
 
-	client := http.Client{Timeout: time.Second * 3}
+	client := http.Client{Timeout: time.Second * 10}
 	resp, err := client.Get(fmt.Sprintf("https://candle.fmph.uniba.sk/rozvrh/%v.xml", name))
 	if err != nil {
 		return nil, err
